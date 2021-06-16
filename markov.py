@@ -63,6 +63,7 @@ class Markov:
                     last_words = ' '.join(
                         last_words.split()[-self.__window+1:])
                     return Markov('dict/messages.txt', self.__window-1).subgenerate(last_words, 'end')
+
     def generate(self, length: int = None, query: str = None) -> str:
         # Generating our sentence
         def generate_gibberish(length: int) -> str:
@@ -96,21 +97,25 @@ class Markov:
             words = query.split()
             for i in range(len(words), 0, -1):
                 kek = filter(
-                                    lambda x: set(x[0].split()[-i:]) == set(words[-i:]),
-                                    self.__qa
-                                )
+                    lambda x: set(words[-i:]).issubset(set(x[0].split())),
+                    self.__qa
+                )
                 self.__start = [j for _, j in kek]
                 if len(self.__start) > 0:
                     self.__window = i
                     break
             else:
                 self.__set_defaults()
+                print('Peepos')
                 return generate_gibberish(length=self.__window * 2)
 
             if self.__window == len(words):
                 return random.choice(self.__start)
-                
-            return generate_gibberish(length=self.__window * 2)
+
+            if self.__window <= 2:
+                return generate_gibberish(length=5)
+            else:
+                return generate_gibberish(length=self.__window * 2)
 
     # Setting defaults (start, mid, end)
     def __set_defaults(self) -> None:
@@ -119,7 +124,7 @@ class Markov:
         self.__combN('all')
 
     def __init__(self, path: str, window: int) -> None:
-        self.__window = window
+        self.__window = window if window > 0 else 1
         self.__dictionary = defaultdict(list)
         self.__end_dict = defaultdict(list)
         self.__start = []
@@ -138,4 +143,4 @@ class Markov:
 
 
 moysha = Markov('dict', 2)
-print(moysha.generate(query='ух что в чате'))
+print(moysha.generate(query='что должны делать тесты'))
