@@ -96,7 +96,7 @@ class Markov:
             words = query.split()
             for i in range(len(words), 0, -1):
                 kek = filter(
-                                    lambda x: set(x[0].split()[-i:]) == set(words[-i:]),
+                                    lambda x: set(words[-i:]).issubset(set(x[0].split())),
                                     self.__qa
                                 )
                 self.__start = [j for _, j in kek]
@@ -105,6 +105,7 @@ class Markov:
                     break
             else:
                 self.__set_defaults()
+                print('Peepos')
                 return generate_gibberish(length=self.__window * 2)
 
             if self.__window == len(words):
@@ -138,4 +139,4 @@ class Markov:
 
 
 moysha = Markov('dict', 2)
-print(moysha.generate(query='ух что в чате'))
+print(moysha.generate(query='а хули ты хотел'))
