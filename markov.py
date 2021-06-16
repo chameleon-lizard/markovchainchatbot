@@ -106,16 +106,15 @@ class Markov:
                     break
             else:
                 self.__set_defaults()
-                print('Peepos')
                 return generate_gibberish(length=self.__window * 2)
 
             if self.__window == len(words):
                 return random.choice(self.__start)
 
             if self.__window <= 2:
-                return generate_gibberish(length=5)
+                return generate_gibberish(length=5).replace('\n', '')
             else:
-                return generate_gibberish(length=self.__window * 2)
+                return generate_gibberish(length=self.__window * 2).replace('\n', '')
 
     # Setting defaults (start, mid, end)
     def __set_defaults(self) -> None:
@@ -143,4 +142,4 @@ class Markov:
 
 
 moysha = Markov('dict', 2)
-print(moysha.generate(query='что должны делать тесты'))
+print(moysha.generate(query='Пошёл нахуй'))
