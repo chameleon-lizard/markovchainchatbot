@@ -71,7 +71,7 @@ class Markov:
             sentence = random.choice(self.__start).capitalize()
 
             # Generating the base of the sentence
-            for i in range(length):
+            for _ in range(length):
                 last_words = (' '.join([str(item)
                                         for item in sentence.split()[-self.__window:]])).lower()
                 words = Markov('dict/messages.txt', self.__window-1).subgenerate(' '.join(last_words.split(
@@ -94,22 +94,9 @@ class Markov:
             self.__set_defaults()
             return generate_gibberish(length=length)
         else:
-            words = query.split()
-            for i in range(len(words), 0, -1):
-                kek = filter(
-                    lambda x: set(words[-i:]).issubset(set(x[0].split())),
-                    self.__qa
-                )
-                self.__start = [j for _, j in kek]
-                if len(self.__start) > 0:
-                    self.__window = i
-                    break
-            else:
-                self.__set_defaults()
-                return generate_gibberish(length=self.__window * 2)
-
-            if self.__window == len(words):
-                return random.choice(self.__start)
+            word_amount = 4 if len(query.split()) >= 4 else len(query.split())
+            self.__start = [' '.join(query.split(' ')[-word_amount:])]
+            self.__window = word_amount
 
             if self.__window <= 2:
                 return generate_gibberish(length=5).replace('\n', '')
@@ -142,4 +129,4 @@ class Markov:
 
 
 moysha = Markov('dict', 2)
-print(moysha.generate(query='Пошёл нахуй'))
+print(moysha.generate(query='Что ты думаешь о фемках'))
